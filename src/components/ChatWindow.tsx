@@ -52,9 +52,17 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
 
         setMessages((prev) => {
           const existingIds = new Set(prev.map((m) => m.id));
-          const uniqueNewMessages = newMessages.filter(
-            (m) => !existingIds.has(m.id)
+          const localUserTexts = new Set(
+            prev
+              .filter((m) => m.id.startsWith("local_") && m.sender === "user")
+              .map((m) => m.text)
           );
+
+          const uniqueNewMessages = newMessages.filter((m) => {
+            if (existingIds.has(m.id)) return false;
+            if (m.sender === "user" && localUserTexts.has(m.text)) return false;
+            return true;
+          });
           return [...prev, ...uniqueNewMessages];
         });
       }
