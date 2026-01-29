@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { apiClient, isAxiosError } from "@lib/axios";
 import type { ChatMessage } from "@type/line.type";
 
 interface ChatWindowProps {
@@ -25,10 +26,9 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
 
   const fetchNewMessages = useCallback(async () => {
     try {
-      const response = await fetch(
-        `/api/messages?since=${lastFetchTimestamp.current}`
+      const { data } = await apiClient.get(
+        `/messages?since=${lastFetchTimestamp.current}`
       );
-      const data = await response.json();
 
       if (data.success && data.messages.length > 0) {
         const newMessages: ChatMessage[] = data.messages.map(
@@ -73,15 +73,7 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: messageText }),
-      });
-
-      const data = await response.json();
+      const { data } = await apiClient.post("/send", { message: messageText });
 
       if (data.success) {
         setMessages((prev) =>
@@ -93,8 +85,9 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
         throw new Error(data.error || "Failed to send message");
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to send message";
+      const errorMessage = isAxiosError(err)
+        ? err.response?.data?.error || err.message
+        : "Failed to send message";
       setError(errorMessage);
 
       setMessages((prev) =>

@@ -1,23 +1,10 @@
-import axios, { AxiosInstance, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import crypto from "node:crypto";
 import {
-  getLineConfig,
   getChannelSecret,
   getDefaultUserId as getDefaultUserIdFromConfig,
-} from "@/config/line.config";
-
-const createLineClient = (): AxiosInstance => {
-  const config = getLineConfig();
-
-  return axios.create({
-    baseURL: config.apiBase,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.channelAccessToken}`,
-    },
-    timeout: config.timeout,
-  });
-};
+} from "@config/line.config";
+import { createLineApiClient, isAxiosError } from "@lib/axios";
 
 export const getDefaultUserId = (): string => getDefaultUserIdFromConfig();
 
@@ -26,7 +13,7 @@ export const sendPushMessage = async (
   message: string
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const client = createLineClient();
+    const client = createLineApiClient();
     await client.post("/message/push", {
       to: userId,
       messages: [{ type: "text", text: message }],
@@ -35,7 +22,7 @@ export const sendPushMessage = async (
   } catch (error) {
     console.error("Failed to send LINE message:", error);
 
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       const axiosError = error as AxiosError<{ message?: string }>;
       return {
         success: false,
@@ -68,14 +55,14 @@ export const sendReplyMessage = async (
   message: string
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const client = createLineClient();
+    const client = createLineApiClient();
     await client.post("/message/reply", {
       replyToken,
       messages: [{ type: "text", text: message }],
     });
     return { success: true };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       const axiosError = error as AxiosError<{ message?: string }>;
       return {
         success: false,

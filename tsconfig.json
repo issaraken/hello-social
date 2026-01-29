@@ -25,6 +25,7 @@
       "@app/*": ["./src/app/*"],
       "@public/*": ["./public/*"],
       "@utils/*": ["./utils/*"],
+      "@config/*": ["./src/config/*"],
       "@/*": ["./src/*"]
     }
   },
