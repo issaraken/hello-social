@@ -6,9 +6,6 @@ import {
   getDefaultUserId as getDefaultUserIdFromConfig,
 } from "@/config/line.config";
 
-/**
- * Create axios instance for LINE API
- */
 const createLineClient = (): AxiosInstance => {
   const config = getLineConfig();
 
@@ -22,14 +19,8 @@ const createLineClient = (): AxiosInstance => {
   });
 };
 
-/**
- * Get default LINE User ID from environment
- */
 export const getDefaultUserId = (): string => getDefaultUserIdFromConfig();
 
-/**
- * Send a push message to a specific LINE user
- */
 export const sendPushMessage = async (
   userId: string,
   message: string
@@ -59,9 +50,6 @@ export const sendPushMessage = async (
   }
 };
 
-/**
- * Verify LINE webhook signature
- */
 export const verifySignature = (body: string, signature: string): boolean => {
   try {
     const channelSecret = getChannelSecret();
@@ -75,9 +63,6 @@ export const verifySignature = (body: string, signature: string): boolean => {
   }
 };
 
-/**
- * Send a reply message (used in webhook responses)
- */
 export const sendReplyMessage = async (
   replyToken: string,
   message: string

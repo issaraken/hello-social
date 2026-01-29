@@ -1,8 +1,3 @@
-/**
- * LINE Configuration
- * Centralized configuration for LINE Messaging API
- */
-
 export interface LineConfig {
   apiBase: string;
   channelAccessToken: string;
@@ -11,9 +6,6 @@ export interface LineConfig {
   timeout: number;
 }
 
-/**
- * Default values for LINE configuration
- */
 const defaultConfig = {
   apiBase: "https://api.line.me/v2/bot",
   channelAccessToken:
@@ -23,9 +15,6 @@ const defaultConfig = {
   timeout: 10000,
 } as const;
 
-/**
- * Get environment variable with optional default value
- */
 const getEnv = (key: string, defaultValue?: string): string => {
   const value = process.env[key];
   if (!value && defaultValue === undefined) {
@@ -34,10 +23,6 @@ const getEnv = (key: string, defaultValue?: string): string => {
   return value || defaultValue || "";
 };
 
-/**
- * Get LINE configuration from environment variables
- * Uses default values when environment variables are not set
- */
 export const getLineConfig = (): LineConfig => ({
   apiBase: getEnv("LINE_API_BASE", defaultConfig.apiBase),
   channelAccessToken: getEnv(
@@ -49,9 +34,6 @@ export const getLineConfig = (): LineConfig => ({
   timeout: Number(getEnv("LINE_TIMEOUT", String(defaultConfig.timeout))),
 });
 
-/**
- * Get specific config values (for cases where you only need certain values)
- */
 export const getApiBase = (): string =>
   getEnv("LINE_API_BASE", defaultConfig.apiBase);
 

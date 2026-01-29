@@ -1,22 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMessagesSince, getAllMessages } from "@lib/messageStore";
 
-/**
- * Get messages from LINE (received via webhook)
- * Used by the frontend to poll for new messages
- */
 export const GET = async (request: NextRequest): Promise<NextResponse> => {
   try {
     const { searchParams } = new URL(request.url);
     const sinceParam = searchParams.get("since");
 
-    let messages;
-    if (sinceParam) {
-      const since = Number.parseInt(sinceParam, 10);
-      messages = getMessagesSince(since);
-    } else {
-      messages = getAllMessages();
-    }
+    const messages = sinceParam
+      ? getMessagesSince(Number.parseInt(sinceParam, 10))
+      : getAllMessages();
 
     return NextResponse.json({
       success: true,

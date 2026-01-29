@@ -15,7 +15,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastFetchTimestamp = useRef<number>(0);
 
-  // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -24,7 +23,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     scrollToBottom();
   }, [messages]);
 
-  // Poll for new messages from LINE (received via webhook)
   const fetchNewMessages = useCallback(async () => {
     try {
       const response = await fetch(
@@ -51,13 +49,11 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     }
   }, []);
 
-  // Set up polling interval
   useEffect(() => {
-    const interval = setInterval(fetchNewMessages, 3000); // Poll every 3 seconds
+    const interval = setInterval(fetchNewMessages, 3000);
     return () => clearInterval(interval);
   }, [fetchNewMessages]);
 
-  // Send message to LINE
   const sendMessage = async () => {
     if (!inputText.trim() || isLoading) return;
 
@@ -65,7 +61,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     setInputText("");
     setError(null);
 
-    // Create optimistic message
     const newMessage: ChatMessage = {
       id: `local_${Date.now()}`,
       text: messageText,
@@ -89,7 +84,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
       const data = await response.json();
 
       if (data.success) {
-        // Update message status to sent
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === newMessage.id ? { ...msg, status: "sent" } : msg
@@ -103,7 +97,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
         err instanceof Error ? err.message : "Failed to send message";
       setError(errorMessage);
 
-      // Update message status to failed
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === newMessage.id ? { ...msg, status: "failed" } : msg
@@ -114,7 +107,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     }
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -122,7 +114,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     }
   };
 
-  // Retry failed message
   const retryMessage = (message: ChatMessage) => {
     setMessages((prev) => prev.filter((msg) => msg.id !== message.id));
     setInputText(message.text);
@@ -132,7 +123,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
     <div
       className={`flex flex-col h-full bg-white dark:bg-zinc-900 rounded-2xl shadow-xl overflow-hidden ${className}`}
     >
-      {/* Header */}
       <div className="flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white">
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -145,7 +135,6 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
         </div>
       </div>
 
-      {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50 dark:bg-zinc-800">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-zinc-400">
@@ -254,14 +243,12 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="px-4 py-2 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
-      {/* Input Area */}
       <div className="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700">
         <div className="flex items-center gap-2">
           <input

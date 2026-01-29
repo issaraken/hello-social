@@ -9,7 +9,6 @@ export const POST = async (
     const body: SendMessageRequest = await request.json();
     const { message, userId } = body;
 
-    // Validate message
     if (!message || typeof message !== "string" || message.trim() === "") {
       return NextResponse.json(
         { success: false, error: "Message is required" },
@@ -17,10 +16,7 @@ export const POST = async (
       );
     }
 
-    // Use provided userId or fall back to default from environment
     const targetUserId = userId || getDefaultUserId();
-
-    // Send message via LINE API
     const result = await sendPushMessage(targetUserId, message.trim());
 
     if (!result.success) {
