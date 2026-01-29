@@ -1,14 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getMessagesSince, getAllMessages } from "@lib/messageStore";
+import { NextResponse } from "next/server";
+import { getAllMessages } from "@lib/messageStore";
 
-export const GET = async (request: NextRequest): Promise<NextResponse> => {
+export const GET = async (): Promise<NextResponse> => {
   try {
-    const { searchParams } = new URL(request.url);
-    const sinceParam = searchParams.get("since");
-
-    const messages = sinceParam
-      ? getMessagesSince(Number.parseInt(sinceParam, 10))
-      : getAllMessages();
+    const messages = getAllMessages();
 
     return NextResponse.json({
       success: true,

@@ -7,7 +7,7 @@ import type { LineWebhookBody, LineWebhookEvent } from "@type/line.type";
  * Handle message events
  */
 const handleMessageEvent = async (event: LineWebhookEvent): Promise<void> => {
-  if (!event.message || event.message.type !== "text" || !event.message.text) {
+  if (event.message?.type !== "text" || !event.message?.text) {
     console.log("Received non-text message");
     return;
   }
@@ -21,7 +21,7 @@ const handleMessageEvent = async (event: LineWebhookEvent): Promise<void> => {
   addMessage({
     text,
     userId,
-    timestamp: event.timestamp,
+    timestamp: Date.now(),
   });
 };
 

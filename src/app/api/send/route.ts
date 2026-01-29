@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendPushMessage, getDefaultUserId } from "@lib/line";
+import { addMessage } from "@lib/messageStore";
 import type { SendMessageRequest, SendMessageResponse } from "@type/line.type";
 
 export const POST = async (
@@ -25,6 +26,12 @@ export const POST = async (
         { status: 500 }
       );
     }
+
+    addMessage({
+      text: message.trim(),
+      userId: "me",
+      timestamp: Date.now(),
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
