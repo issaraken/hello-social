@@ -2,9 +2,9 @@
 export interface ChatMessage {
   id: string;
   text: string;
-  sender: 'user' | 'line';
+  sender: "user" | "line";
   timestamp: Date;
-  status?: 'sending' | 'sent' | 'failed';
+  status?: "sending" | "sent" | "failed";
 }
 
 // API Request/Response Types

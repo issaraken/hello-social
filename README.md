@@ -49,6 +49,7 @@ LINE_USER_ID=your_user_id
 ```
 
 **Where to find these values:**
+
 - **Channel Access Token**: LINE Developers Console → Your Channel → Messaging API → Channel access token (long-lived)
 - **Channel Secret**: LINE Developers Console → Your Channel → Basic settings → Channel secret
 - **User ID**: LINE Developers Console → Your Channel → Basic settings → Your user ID
@@ -114,11 +115,11 @@ chat-app/
 
 ## API Routes
 
-| Route | Method | Description |
-|-------|--------|-------------|
-| `/api/send` | POST | Send a message to LINE OA |
-| `/api/webhook` | POST | Receive webhook events from LINE |
-| `/api/messages` | GET | Get messages received from LINE |
+| Route           | Method | Description                      |
+| --------------- | ------ | -------------------------------- |
+| `/api/send`     | POST   | Send a message to LINE OA        |
+| `/api/webhook`  | POST   | Receive webhook events from LINE |
+| `/api/messages` | GET    | Get messages received from LINE  |
 
 ## Tech Stack
 
