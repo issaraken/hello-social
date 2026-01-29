@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendPushMessage, getDefaultUserId } from "@lib/line";
 import type { SendMessageRequest, SendMessageResponse } from "@type/line.type";
 
-export async function POST(
+export const POST = async (
   request: NextRequest
-): Promise<NextResponse<SendMessageResponse>> {
+): Promise<NextResponse<SendMessageResponse>> => {
   try {
     const body: SendMessageRequest = await request.json();
     const { message, userId } = body;
@@ -46,4 +46,4 @@ export async function POST(
       { status: 500 }
     );
   }
-}
+};

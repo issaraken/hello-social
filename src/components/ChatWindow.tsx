@@ -7,7 +7,7 @@ interface ChatWindowProps {
   readonly className?: string;
 }
 
-export default function ChatWindow({ className = "" }: ChatWindowProps) {
+const ChatWindow = ({ className = "" }: ChatWindowProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -308,4 +308,6 @@ export default function ChatWindow({ className = "" }: ChatWindowProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ChatWindow;
