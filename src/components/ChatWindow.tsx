@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { apiClient, isAxiosError } from "@lib/axios";
 import { cn } from "@lib/utils";
+import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "@type/line.type";
 
 interface ChatWindowProps {
@@ -240,9 +241,11 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
                         </svg>
                       )}
                       {message.status === "failed" && (
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="xs"
                           onClick={() => retryMessage(message)}
-                          className="text-red-300 hover:text-white flex items-center gap-1"
+                          className="text-red-300 hover:text-white h-auto p-0"
                         >
                           <svg
                             className="w-3 h-3"
@@ -252,7 +255,7 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                           </svg>
                           <span>Retry</span>
-                        </button>
+                        </Button>
                       )}
                     </>
                   )}
@@ -281,10 +284,11 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
             disabled={isLoading}
             className="flex-1 px-4 py-3 bg-zinc-100 dark:bg-zinc-800 rounded-full border-none focus:outline-none focus:ring-2 focus:ring-green-500 text-zinc-900 dark:text-white placeholder-zinc-400 disabled:opacity-50"
           />
-          <button
+          <Button
             onClick={sendMessage}
             disabled={!inputText.trim() || isLoading}
-            className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 disabled:cursor-not-allowed text-white flex items-center justify-center transition-colors"
+            size="icon-lg"
+            className="rounded-full bg-green-500 hover:bg-green-600"
           >
             {isLoading ? (
               <svg
@@ -311,7 +315,7 @@ const ChatWindow = ({ className = "" }: ChatWindowProps) => {
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
