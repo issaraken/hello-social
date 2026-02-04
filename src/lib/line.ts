@@ -5,6 +5,7 @@ import {
   getDefaultUserId as getDefaultUserIdFromConfig,
 } from "@config/line.config";
 import { createLineApiClient, isAxiosError } from "@lib/axios";
+import type { LineUserProfile } from "@type/line.type";
 
 export const getDefaultUserId = (): string => getDefaultUserIdFromConfig();
 
@@ -88,6 +89,31 @@ export const sendBroadcastMessage = async (
     return { success: true };
   } catch (error) {
     console.error("Failed to send broadcast message:", error);
+
+    if (isAxiosError(error)) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      return {
+        success: false,
+        error: axiosError.response?.data?.message || axiosError.message,
+      };
+    }
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+};
+
+export const getUserProfile = async (
+  userId: string
+): Promise<{ success: boolean; profile?: LineUserProfile; error?: string }> => {
+  try {
+    const client = createLineApiClient();
+    const { data } = await client.get<LineUserProfile>(`/profile/${userId}`);
+    return { success: true, profile: data };
+  } catch (error) {
+    console.error("Failed to get user profile:", error);
 
     if (isAxiosError(error)) {
       const axiosError = error as AxiosError<{ message?: string }>;

@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
-import { getAllMessages } from "@lib/messageStore";
+import { NextRequest, NextResponse } from "next/server";
+import { getAllMessages, getMessagesByUserId } from "@lib/messageStore";
 
-export const GET = async (): Promise<NextResponse> => {
+export const GET = async (request: NextRequest): Promise<NextResponse> => {
   try {
-    const messages = getAllMessages();
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    const messages = userId ? getMessagesByUserId(userId) : getAllMessages();
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifySignature } from "@lib/line";
+import { verifySignature, getUserProfile } from "@lib/line";
 import { addMessage } from "@lib/messageStore";
+import { addOrUpdateUser } from "@lib/userStore";
 import type { LineWebhookBody, LineWebhookEvent } from "@type/line.type";
 
 /**
@@ -17,11 +18,24 @@ const handleMessageEvent = async (event: LineWebhookEvent): Promise<void> => {
 
   console.log(`Message from ${userId}: ${text}`);
 
-  // Store the message for the web chat to retrieve
+  // Fetch user profile to get displayName
+  let displayName: string | undefined;
+  try {
+    const { success, profile } = await getUserProfile(userId);
+    if (success && profile) {
+      displayName = profile.displayName;
+      console.log(`User profile: ${displayName}`);
+    }
+  } catch (error) {
+    console.error("Failed to fetch user profile:", error);
+  }
+
+  addOrUpdateUser(userId, displayName);
   addMessage({
     text,
     userId,
     timestamp: Date.now(),
+    direction: "incoming",
   });
 };
 

@@ -29,8 +29,9 @@ export const POST = async (
 
     addMessage({
       text: message.trim(),
-      userId: "me",
+      userId: targetUserId,
       timestamp: Date.now(),
+      direction: "outgoing",
     });
 
     return NextResponse.json({ success: true });

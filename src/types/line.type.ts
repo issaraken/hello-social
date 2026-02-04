@@ -1,4 +1,3 @@
-// Chat Message Types
 export interface ChatMessage {
   id: string;
   text: string;
@@ -7,7 +6,6 @@ export interface ChatMessage {
   status?: "sending" | "sent" | "failed";
 }
 
-// API Request/Response Types
 export interface SendMessageRequest {
   message: string;
   userId?: string; // Optional: specific user ID, defaults to env LINE_USER_ID
@@ -18,7 +16,6 @@ export interface SendMessageResponse {
   error?: string;
 }
 
-// LINE Webhook Event Types
 export interface LineWebhookEvent {
   type: string;
   timestamp: number;
@@ -41,10 +38,23 @@ export interface LineWebhookBody {
   events: LineWebhookEvent[];
 }
 
-// Stored messages for webhook (in-memory storage)
 export interface StoredMessage {
   id: string;
   text: string;
   userId: string;
   timestamp: number;
+  direction: "incoming" | "outgoing";
+}
+
+export interface StoredUser {
+  id: string;
+  displayName?: string;
+  lastMessageAt: number;
+}
+
+export interface LineUserProfile {
+  userId: string;
+  displayName: string;
+  pictureUrl?: string;
+  statusMessage?: string;
 }

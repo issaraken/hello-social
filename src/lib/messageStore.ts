@@ -63,6 +63,9 @@ export const getMessagesSince = (timestamp: number): StoredMessage[] =>
 
 export const getAllMessages = (): StoredMessage[] => [...messages];
 
+export const getMessagesByUserId = (userId: string): StoredMessage[] =>
+  messages.filter((msg) => msg.userId === userId);
+
 export const clearMessages = (): void => {
   messages.length = 0;
   saveMessages(messages);
