@@ -76,3 +76,30 @@ export const sendReplyMessage = async (
     };
   }
 };
+
+export const sendBroadcastMessage = async (
+  message: string
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const client = createLineApiClient();
+    await client.post("/message/broadcast", {
+      messages: [{ type: "text", text: message }],
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to send broadcast message:", error);
+
+    if (isAxiosError(error)) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      return {
+        success: false,
+        error: axiosError.response?.data?.message || axiosError.message,
+      };
+    }
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+};
